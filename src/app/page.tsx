@@ -1,4 +1,3 @@
-// Test Deployment
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
@@ -7,12 +6,7 @@ import Button from '@/components/Button'
 export default function Home() {
   const numbersRef = useRef<(HTMLInputElement | null)[]>([])
 
-  const initialBalance = () => {
-    const savedBalance = localStorage.getItem('balance')
-    return savedBalance ? parseInt(savedBalance, 10) : 2000
-  }
-
-  const [balance, setBalance] = useState(initialBalance)
+  const [balance, setBalance] = useState(2000)
   const [bet, setBet] = useState(100)
   const [message, setMessage] = useState('')
 
@@ -31,7 +25,9 @@ export default function Home() {
     }
 
     if (balance < bet) {
-      setMessage('Lo liat tu saldo kurang, kasi bet yang bener. Kontak atmin klo mau saldo')
+      setMessage(
+        'Lo liat tu saldo kurang, kasi bet yang bener. Kontak atmin klo mau saldo'
+      )
       return
     }
 
@@ -63,7 +59,18 @@ export default function Home() {
   }
 
   useEffect(() => {
-    localStorage.setItem('balance', balance.toString())
+    if (typeof window !== 'undefined') {
+      const savedBalance = localStorage.getItem('balance')
+      if (savedBalance) {
+        setBalance(parseInt(savedBalance, 10))
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('balance', balance.toString())
+    }
   }, [balance])
 
   useEffect(() => {
@@ -72,10 +79,14 @@ export default function Home() {
       setMessage('mff restart gabisa naekin saldo, bukan app kominfo 😹')
     }
 
-    const query = new URLSearchParams(window.location.search)
-    if (query.get('admin') === 'true') {
-      setMessage('Mode atmin, unlimited money. Delete query lagi kalo udah jangan rakus macam dpr')
-      setBalance((prevBalance) => prevBalance + 1000)
+    if (typeof window !== 'undefined') {
+      const query = new URLSearchParams(window.location.search)
+      if (query.get('admin') === 'true') {
+        setMessage(
+          'Mode atmin, unlimited money. Delete query lagi kalo udah jangan rakus macam dpr'
+        )
+        setBalance((prevBalance) => prevBalance + 1000)
+      }
     }
   }, [balance])
 
