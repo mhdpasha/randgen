@@ -45,10 +45,12 @@ export default function Home() {
     if (isWin) {
       setBalance((prevBalance) => prevBalance + bet * 10)
       setMessage('Gacorr jackpot x10 🤑💰')
-    } else if (isPartialWin) {
+    }
+    else if (isPartialWin) {
       setBalance((prevBalance) => prevBalance + Math.floor(bet * 1.5))
       setMessage('Gacorr half-win x1.5 🤑')
-    } else {
+    }
+    else {
       setBalance((prevBalance) => prevBalance - bet)
       setMessage('Coba lagi (ampe rungkat)')
     }
@@ -123,7 +125,7 @@ export default function Home() {
             min="0"
             max={balance}
             value={bet}
-            step={25}
+            step={balance / 100}
             className="w-full mt-2"
             onChange={handleBetChange}
           />
